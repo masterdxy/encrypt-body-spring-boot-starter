@@ -4,6 +4,7 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 
 /**
@@ -40,14 +41,15 @@ public class AESEncryptUtil {
      */
     private static String aes(String content, String password, int type) {
         try {
-            KeyGenerator generator = KeyGenerator.getInstance("AES");
-            SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
-            random.setSeed(password.getBytes());
-            generator.init(128, random);
-            SecretKey secretKey = generator.generateKey();
-            byte[] enCodeFormat = secretKey.getEncoded();
-            SecretKeySpec key = new SecretKeySpec(enCodeFormat, "AES");
-            Cipher cipher = Cipher.getInstance("AES");
+//            KeyGenerator generator = KeyGenerator.getInstance("AES");
+//            SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
+//            random.setSeed(password.getBytes());
+//            generator.init(128);
+//            SecretKey secretKey = generator.generateKey();
+//            byte[] enCodeFormat = secretKey.getEncoded();
+//            SecretKeySpec key = new SecretKeySpec(enCodeFormat, "AES");
+			SecretKey key = new SecretKeySpec(password.getBytes(StandardCharsets.UTF_8), "AES");
+            Cipher cipher = Cipher.getInstance("AES");//AES == AES/ECB/PKCS5Padding
             cipher.init(type, key);
             if (type == Cipher.ENCRYPT_MODE) {
                 byte[] byteContent = content.getBytes("utf-8");
@@ -61,4 +63,11 @@ public class AESEncryptUtil {
         }
         return null;
     }
+
+//	public static void main(String[] args) {
+//    	String key = "1234123412341234";
+//		String en = aes("123",key,1);
+//		System.out.println(en);
+//		System.out.println(aes(en,key,2));
+//	}
 }
